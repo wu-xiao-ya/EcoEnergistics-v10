@@ -1,7 +1,25 @@
 package aeternal.ecoenergistics.common;
 
 import aeternal.ecoenergistics.common.config.EcoConfig;
-import aeternal.ecoenergistics.common.item.*;
+import aeternal.ecoenergistics.common.item.ItemAlloyAvaritia;
+import aeternal.ecoenergistics.common.item.ItemClump;
+import aeternal.ecoenergistics.common.item.ItemCompressed;
+import aeternal.ecoenergistics.common.item.ItemCompressedAvaritia;
+import aeternal.ecoenergistics.common.item.ItemControlCircuitAvaritia;
+import aeternal.ecoenergistics.common.item.ItemCrystal;
+import aeternal.ecoenergistics.common.item.ItemDirtyDust;
+import aeternal.ecoenergistics.common.item.ItemDust;
+import aeternal.ecoenergistics.common.item.ItemDustAvaritia;
+import aeternal.ecoenergistics.common.item.ItemEcoEnergized;
+import aeternal.ecoenergistics.common.item.ItemIngot;
+import aeternal.ecoenergistics.common.item.ItemMoreAlloy;
+import aeternal.ecoenergistics.common.item.ItemMoreControlCircuit;
+import aeternal.ecoenergistics.common.item.ItemMoreDust;
+import aeternal.ecoenergistics.common.item.ItemMoreSolarCells;
+import aeternal.ecoenergistics.common.item.ItemNugget;
+import aeternal.ecoenergistics.common.item.ItemRods;
+import aeternal.ecoenergistics.common.item.ItemShard;
+import aeternal.ecoenergistics.common.item.ItemSolarCellsAvaritia;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;

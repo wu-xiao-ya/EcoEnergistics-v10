@@ -16,8 +16,7 @@ import mekanism.api.transmitters.DynamicNetwork.NetworkClientRequest;
 import mekanism.api.transmitters.IGridTransmitter;
 import mekanism.api.transmitters.TransmitterNetworkRegistry;
 import mekanism.common.capabilities.Capabilities;
-
-import mekanism.common.tile.transmitter.TileEntitySidedPipe.*;
+import mekanism.common.tile.transmitter.TileEntitySidedPipe.ConnectionType;
 import mekanism.common.util.MekanismUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

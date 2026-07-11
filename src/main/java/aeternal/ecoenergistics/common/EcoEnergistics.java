@@ -200,7 +200,7 @@ public class EcoEnergistics implements IModule {
     public void onBlacklistUpdate(MekanismAPI.BoxBlacklistEvent event) {
         for (EcoGeneratorType type : EcoGeneratorType.values()) {
             event.blacklist(EcoEnergisticsBlocks.EcoGeneratorAdd, type.meta);
-            if (type.isStation) {
+            if (type.isStation && EcoEnergistics.hooks.AvaritiaLoaded && EcoConfig.current().integration.AvaritiaEnable.val() && EcoEnergisticsBlocks.AvaritiaGenerator != null) {
                 event.blacklist(EcoEnergisticsBlocks.AvaritiaGenerator, type.meta);
             }
         }

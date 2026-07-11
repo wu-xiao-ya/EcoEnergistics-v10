@@ -8,20 +8,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup Java
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        distribution: 'adopt'
-        java-version: '11'
-        cache: gradle # Only cache stuff since test build action happen mostly
-        
+        distribution: 'temurin'
+        java-version: '17'
+        cache: gradle
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build -Pnet.minecraftforge.gradle.disableUpdateChecker=true
-    - name: Upload artifacts
+      run: ./gradlew clean build -Pnet.minecraftforge.gradle.disableUpdateChecker=true
+    - name: Check removed MekCEu API references
+      shell: bash
+      run: |
+        forbidden='ContainerMekanism|SlotEnergy|NonNullListSynchronized|FluidHandlerWrapper|IFluidHandlerWrapper'
+        for artifact in build/libs/*.jar; do
+          case "$artifact" in
+            *-sources.jar|*-javadoc.jar) continue ;;
+          esac
+          if jdeps --ignore-missing-deps -verbose:class -filter:none "$artifact" | grep -E "$forbidden"; then
+            echo "Found references to removed MekCEu APIs in $artifact"
+            exit 1
+          fi
+        done
+    - name: Upload jar artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MekanismCEu-EcoEnergistics
-        path: build/libs
+        name: EcoEnergistics-jar
+        path: |
+          build/libs/*.jar
+          !build/libs/*-sources.jar
+          !build/libs/*-javadoc.jar
+        if-no-files-found: error
+    - name: Upload sources artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: EcoEnergistics-sources
+        path: build/libs/*-sources.jar
+        if-no-files-found: error

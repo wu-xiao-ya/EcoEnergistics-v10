@@ -30,29 +30,29 @@ public class Infusers {
 
 
     public static void registerInfuseType() {
-        gold = new InfuseType("GOLD", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseGold")).setTranslationKey("gold");
+        gold = new InfuseType("GOLD", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infusegold")).setTranslationKey("gold");
         InfuseRegistry.registerInfuseType(gold);
-        glowstone = new InfuseType("GLOWSTONE", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseGlowstone")).setTranslationKey("glowstone");
+        glowstone = new InfuseType("GLOWSTONE", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infuseglowstone")).setTranslationKey("glowstone");
         InfuseRegistry.registerInfuseType(glowstone);
-        steel = new InfuseType("STEEL", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseSteel")).setTranslationKey("steel");
+        steel = new InfuseType("STEEL", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infusesteel")).setTranslationKey("steel");
         InfuseRegistry.registerInfuseType(steel);
-        lapis = new InfuseType("LAPIS", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseLapis")).setTranslationKey("lapis");
+        lapis = new InfuseType("LAPIS", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infuselapis")).setTranslationKey("lapis");
         InfuseRegistry.registerInfuseType(lapis);
-        emerald = new InfuseType("EMERALD", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseEmerald")).setTranslationKey("emerald");
+        emerald = new InfuseType("EMERALD", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infuseemerald")).setTranslationKey("emerald");
         InfuseRegistry.registerInfuseType(emerald);
-        titanium = new InfuseType("TITANIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseTitanium")).setTranslationKey("titanium");
+        titanium = new InfuseType("TITANIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infusetitanium")).setTranslationKey("titanium");
         InfuseRegistry.registerInfuseType(titanium);
-        uranium = new InfuseType("URANIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseUranium")).setTranslationKey("uranium");
+        uranium = new InfuseType("URANIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infuseuranium")).setTranslationKey("uranium");
         InfuseRegistry.registerInfuseType(uranium);
-        iridium = new InfuseType("IRIDIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseIridium")).setTranslationKey("iridium");
+        iridium = new InfuseType("IRIDIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infuseiridium")).setTranslationKey("iridium");
         InfuseRegistry.registerInfuseType(iridium);
 
         if (EcoEnergistics.hooks.AvaritiaLoaded && EcoConfig.current().integration.AvaritiaEnable.val()){
-            crystal = new InfuseType("CRYSTAL", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseCrystal")).setTranslationKey("crystal");
+            crystal = new InfuseType("CRYSTAL", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infusecrystal")).setTranslationKey("crystal");
             InfuseRegistry.registerInfuseType(crystal);
-            neutronium = new InfuseType("NEUTRONIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseNeutronium")).setTranslationKey("neutronium");
+            neutronium = new InfuseType("NEUTRONIUM", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infuseneutronium")).setTranslationKey("neutronium");
             InfuseRegistry.registerInfuseType(neutronium);
-            infinity = new InfuseType("INFINITY", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/InfuseInfinity")).setTranslationKey("infinity");
+            infinity = new InfuseType("INFINITY", new ResourceLocation(EcoEnergistics.MOD_ID, "blocks/infuse/infuseinfinity")).setTranslationKey("infinity");
             InfuseRegistry.registerInfuseType(infinity);
         }
     }

@@ -2,11 +2,12 @@ package aeternal.ecoenergistics.common.tile;
 
 import io.netty.buffer.ByteBuf;
 import mekanism.api.TileNetworkList;
-import mekanism.common.util.ChargeUtils;
+import mekanism.api.IContentsListener;
+import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
+import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.util.MekanismUtils;
-import mekanism.common.util.NonNullListSynchronized;
 import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -21,11 +22,19 @@ public abstract class TileEntityEcoSolarPanel extends TileEntityEcoGenerator {
     private boolean seesMoon;
     private boolean needsRainCheck = true;
     private float peakOutput;
+    private EnergyInventorySlot energySlot;
 
 
     public TileEntityEcoSolarPanel(String name, double maxEnergy, double output) {
         super("solar", name, maxEnergy, output);
-        inventory = NonNullListSynchronized.withSize(1, ItemStack.EMPTY);
+        initializeInventorySlots();
+    }
+
+    @Override
+    protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
+        InventorySlotHelper helper = createInventorySlotHelper();
+        energySlot = helper.addSlot(EnergyInventorySlot.drain(getMainEnergyContainer(), listener, 143, 35));
+        return helper.build();
     }
 
     public boolean canSeeSun() {
@@ -34,12 +43,6 @@ public abstract class TileEntityEcoSolarPanel extends TileEntityEcoGenerator {
 
     public boolean canSeeMoon() {
         return seesMoon;
-    }
-
-    @Nonnull
-    @Override
-    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
-        return new int[]{0};
     }
 
     @Override
@@ -71,7 +74,7 @@ public abstract class TileEntityEcoSolarPanel extends TileEntityEcoGenerator {
     public void onUpdate() {
         super.onUpdate();
         if (!world.isRemote) {
-            ChargeUtils.charge(0, this);
+            energySlot.drainContainer();
             // Sort out if the generator can see the sun; we no longer check if it's raining here,
             // since under the new rules, we can still generate power when it's raining, albeit at a
             // significant penalty.
@@ -97,19 +100,11 @@ public abstract class TileEntityEcoSolarPanel extends TileEntityEcoGenerator {
     }
 
     @Override
-    public boolean canExtractItem(int slotID, @Nonnull ItemStack itemstack, @Nonnull EnumFacing side) {
+    public boolean canExtractItem(int slotID, @Nonnull net.minecraft.item.ItemStack itemstack, @Nonnull EnumFacing side) {
         if (slotID == 0) {
-            return ChargeUtils.canBeOutputted(itemstack, true);
+            return EnergyInventorySlot.drainExtractCheck(getMainEnergyContainer(), itemstack);
         }
         return false;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slotID, @Nonnull ItemStack itemstack) {
-        if (slotID == 0) {
-            return ChargeUtils.canBeCharged(itemstack);
-        }
-        return true;
     }
 
     @Override

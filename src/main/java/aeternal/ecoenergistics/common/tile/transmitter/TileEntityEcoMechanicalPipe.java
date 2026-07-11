@@ -5,11 +5,12 @@ import aeternal.ecoenergistics.common.tier.EcoPipeTier;
 import aeternal.ecoenergistics.common.tier.MEEAlloyTier;
 import aeternal.ecoenergistics.common.tier.MEETiers;
 import io.netty.buffer.ByteBuf;
+import mekanism.api.Action;
 import mekanism.api.TileNetworkList;
+import mekanism.api.fluid.IExtendedFluidTank;
+import mekanism.api.fluid.IMekanismFluidHandler;
 import mekanism.api.transmitters.TransmissionType;
-import mekanism.common.base.FluidHandlerWrapper;
-import mekanism.common.base.IFluidHandlerWrapper;
-import mekanism.common.capabilities.CapabilityWrapperManager;
+import mekanism.common.capabilities.fluid.DynamicFluidHandler;
 import mekanism.common.tile.transmitter.TileEntitySidedPipe.ConnectionType;
 import mekanism.common.transmitters.grid.FluidNetwork;
 import mekanism.common.util.CapabilityUtils;
@@ -24,12 +25,15 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluidHandler, FluidNetwork, FluidStack> implements IFluidHandlerWrapper {
+public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluidHandler, FluidNetwork, FluidStack> implements IMekanismFluidHandler {
 
     public EcoPipeTier tier = EcoPipeTier.ADVANCED;
 
@@ -38,9 +42,20 @@ public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluid
     public FluidTank buffer = new FluidTank(Fluid.BUCKET_VOLUME);
 
     public FluidStack lastWrite;
-    public CapabilityWrapperManager<IFluidHandlerWrapper, FluidHandlerWrapper> manager = new CapabilityWrapperManager<>(IFluidHandlerWrapper.class, FluidHandlerWrapper.class);
+
+    private final IExtendedFluidTank fluidTank = new EcoFluidTank();
+    private final DynamicFluidHandler fluidHandler = new DynamicFluidHandler(
+            this::getFluidTanksForSide,
+            this::canInsertFluidSide,
+            this::canExtractFluidSide,
+            this::onContentsChanged
+    );
 
     private int nextTransfer = 0;
+
+    public void onContentsChanged() {
+        markChunkDirty();
+    }
 
     @Override
     public MEETiers getBaseTier() {
@@ -205,17 +220,33 @@ public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluid
         }
     }
 
+    private List<IExtendedFluidTank> getFluidTanksForSide(EnumFacing side) {
+        if (isRedstoneActivated() || (side != null && !canConnect(side))) {
+            return Collections.emptyList();
+        }
+        return Collections.singletonList(fluidTank);
+    }
+
+    private boolean canInsertFluidSide(EnumFacing side) {
+        return side == null || getConnectionType(side) == ConnectionType.NORMAL || getConnectionType(side) == ConnectionType.PULL;
+    }
+
+    private boolean canExtractFluidSide(EnumFacing side) {
+        return side == null || getConnectionType(side) == ConnectionType.NORMAL || getConnectionType(side) == ConnectionType.PUSH;
+    }
+
     @Override
     public int fill(EnumFacing from, @Nonnull FluidStack resource, boolean doFill) {
-        return takeFluid(resource, doFill);
+        return getFluidCapability(from).fill(resource, doFill);
     }
 
     @Override
     public boolean canFill(EnumFacing from, @Nonnull FluidStack fluid) {
-        return getConnectionType(from) == ConnectionType.NORMAL;
+        return fluid != null
+                && fluid.getFluid() != null
+                && (from == null || fluidHandler.canInsertFluid(from));
     }
 
-    @Override
     public FluidTankInfo[] getTankInfo(EnumFacing from) {
         if (from != null && getConnectionType(from) != ConnectionType.NONE) {
             //Our buffer or the network's buffer if we have a network
@@ -224,13 +255,57 @@ public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluid
         return PipeUtils.EMPTY;
     }
 
-    @Override
     public FluidTankInfo[] getAllTanks() {
         if (getTransmitter().hasTransmitterNetwork()) {
             FluidNetwork network = getTransmitter().getTransmitterNetwork();
             return new FluidTankInfo[]{new FluidTankInfo(network.getBuffer(), network.getCapacity())};
         }
         return new FluidTankInfo[]{buffer.getInfo()};
+    }
+
+    @Override
+    public boolean canHandleFluid() {
+        return true;
+    }
+
+    @Override
+    public List<IExtendedFluidTank> getFluidTanks(EnumFacing side) {
+        return fluidHandler.getFluidTanks(side);
+    }
+
+    @Override
+    public boolean canInsertFluid(EnumFacing side) {
+        return fluidHandler.canInsertFluid(side);
+    }
+
+    @Override
+    public boolean canExtractFluid(EnumFacing side) {
+        return fluidHandler.canExtractFluid(side);
+    }
+
+    @Override
+    public FluidStack insertFluid(int tank, FluidStack stack, EnumFacing side, Action action) {
+        return fluidHandler.insertFluid(tank, stack, side, action);
+    }
+
+    @Override
+    public FluidStack extractFluid(int tank, int amount, EnumFacing side, Action action) {
+        return fluidHandler.extractFluid(tank, amount, side, action);
+    }
+
+    @Override
+    public FluidStack insertFluid(FluidStack stack, EnumFacing side, Action action) {
+        return fluidHandler.insertFluid(stack, side, action);
+    }
+
+    @Override
+    public FluidStack extractFluid(int amount, EnumFacing side, Action action) {
+        return fluidHandler.extractFluid(amount, side, action);
+    }
+
+    @Override
+    public FluidStack extractFluid(FluidStack stack, EnumFacing side, Action action) {
+        return fluidHandler.extractFluid(stack, side, action);
     }
 
     public int getPullAmount() {
@@ -286,14 +361,164 @@ public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluid
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing side) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, side);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
+                && (side == null || fluidHandler.canInsertFluid(side) || fluidHandler.canExtractFluid(side))
+                || super.hasCapability(capability, side);
     }
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing side) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(manager.getWrapper(this, side));
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(getFluidCapability(side));
         }
         return super.getCapability(capability, side);
+    }
+
+    private IFluidHandler getFluidCapability(@Nullable EnumFacing side) {
+        return side == null ? fluidHandler : new SideAwareFluidHandler(side);
+    }
+
+    private class SideAwareFluidHandler implements IFluidHandler {
+
+        private final EnumFacing side;
+
+        private SideAwareFluidHandler(EnumFacing side) {
+            this.side = side;
+        }
+
+        @Nonnull
+        @Override
+        public IFluidTankProperties[] getTankProperties() {
+            List<IExtendedFluidTank> tanks = fluidHandler.getFluidTanks(side);
+            IFluidTankProperties[] properties = new IFluidTankProperties[tanks.size()];
+            for (int i = 0; i < tanks.size(); i++) {
+                IExtendedFluidTank tank = tanks.get(i);
+                properties[i] = new IFluidTankProperties() {
+                    @Nullable
+                    @Override
+                    public FluidStack getContents() {
+                        return tank.getFluid();
+                    }
+
+                    @Override
+                    public int getCapacity() {
+                        return tank.getCapacity();
+                    }
+
+                    @Override
+                    public boolean canFill() {
+                        return fluidHandler.canInsertFluid(side);
+                    }
+
+                    @Override
+                    public boolean canDrain() {
+                        return fluidHandler.canExtractFluid(side);
+                    }
+
+                    @Override
+                    public boolean canFillFluidType(FluidStack fluidStack) {
+                        return fluidStack != null
+                                && fluidStack.getFluid() != null
+                                && canFill()
+                                && tank.isFluidValid(fluidStack);
+                    }
+
+                    @Override
+                    public boolean canDrainFluidType(FluidStack fluidStack) {
+                        FluidStack current = tank.getFluid();
+                        return fluidStack != null
+                                && fluidStack.getFluid() != null
+                                && canDrain()
+                                && current != null
+                                && current.isFluidEqual(fluidStack);
+                    }
+                };
+            }
+            return properties;
+        }
+
+        @Override
+        public int fill(FluidStack resource, boolean doFill) {
+            if (resource == null || resource.amount <= 0) {
+                return 0;
+            }
+            FluidStack remainder = fluidHandler.insertFluid(resource, side, Action.get(doFill));
+            return remainder == null ? resource.amount : resource.amount - remainder.amount;
+        }
+
+        @Nullable
+        @Override
+        public FluidStack drain(FluidStack resource, boolean doDrain) {
+            if (resource == null || resource.amount <= 0) {
+                return null;
+            }
+            FluidStack drained = fluidHandler.extractFluid(resource, side, Action.get(doDrain));
+            return drained == null || drained.amount <= 0 ? null : drained;
+        }
+
+        @Nullable
+        @Override
+        public FluidStack drain(int maxDrain, boolean doDrain) {
+            if (maxDrain <= 0) {
+                return null;
+            }
+            FluidStack drained = fluidHandler.extractFluid(maxDrain, side, Action.get(doDrain));
+            return drained == null || drained.amount <= 0 ? null : drained;
+        }
+    }
+
+    private class EcoFluidTank implements IExtendedFluidTank {
+
+        @Override
+        public FluidStack getFluid() {
+            FluidStack active = getTransmitter().hasTransmitterNetwork()
+                    ? getTransmitter().getTransmitterNetwork().getBuffer()
+                    : buffer.getFluid();
+            return active == null || active.amount <= 0 ? null : active;
+        }
+
+        @Override
+        public int getFluidAmount() {
+            FluidStack active = getFluid();
+            return active == null ? 0 : active.amount;
+        }
+
+        @Override
+        public int getCapacity() {
+            return getTransmitter().hasTransmitterNetwork()
+                    ? getTransmitter().getTransmitterNetwork().getCapacity()
+                    : TileEntityEcoMechanicalPipe.this.getCapacity();
+        }
+
+        @Override
+        public void setStack(FluidStack stack) {
+            if (stack != null && !isFluidValid(stack)) {
+                return;
+            }
+            setStackUnchecked(stack);
+        }
+
+        @Override
+        public void setStackUnchecked(FluidStack stack) {
+            FluidStack active = stack == null || stack.amount <= 0
+                    ? null
+                    : new FluidStack(stack, Math.min(stack.amount, getCapacity()));
+            if (getTransmitter().hasTransmitterNetwork()) {
+                getTransmitter().getTransmitterNetwork().setBuffer(active);
+            } else {
+                buffer.setFluid(active);
+            }
+            onContentsChanged();
+        }
+
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            return stack != null && stack.getFluid() != null;
+        }
+
+        @Override
+        public void onContentsChanged() {
+            markChunkDirty();
+        }
     }
 }

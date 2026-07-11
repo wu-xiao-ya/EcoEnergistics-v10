@@ -4,7 +4,6 @@ import aeternal.ecoenergistics.common.tier.EcoTubeTier;
 import aeternal.ecoenergistics.common.tier.MEEAlloyTier;
 import aeternal.ecoenergistics.common.tier.MEETiers;
 import aeternal.ecoenergistics.common.block.states.BlockStateEcoTransmitter.EcoTransmitterType;
-import mekanism.common.tile.transmitter.TileEntitySidedPipe.*;
 import io.netty.buffer.ByteBuf;
 import java.util.Collection;
 import javax.annotation.Nonnull;
@@ -18,8 +17,8 @@ import mekanism.api.gas.IGasHandler;
 import mekanism.api.transmitters.TransmissionType;
 
 import mekanism.common.capabilities.Capabilities;
-
 import mekanism.common.transmitters.grid.GasNetwork;
+import mekanism.common.tile.transmitter.TileEntitySidedPipe.ConnectionType;
 import mekanism.common.util.CapabilityUtils;
 import mekanism.common.util.GasUtils;
 import net.minecraft.nbt.NBTTagCompound;

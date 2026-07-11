@@ -1,9 +1,11 @@
 [![](https://img.shields.io/discord/1137202630125428868?color=f3f2f4&label=Discord&logo=Discord&logoColor=4d57de&style=for-the-badge)](https://discord.gg/bXgXTa6Wxs)[![Modrinth Downloads](https://img.shields.io/modrinth/dt/pFTNIPnW?style=for-the-badge&logo=modrinth&labelColor=666666&color=54ac91&link=https://modrinth.com/mod/mekanism-eco-energistics)](https://modrinth.com/mod/mekanism-eco-energistics)![Static Badge](https://img.shields.io/badge/Supported-5ebfa2?style=for-the-badge&logoColor=4d57de&label=Status&color=5ebfa2)![Static Badge](https://img.shields.io/badge/YES-5ebfa2?style=for-the-badge&logoColor=4d57de&label=Early-DEV&color=a40a00)
 
 
-Eco Energistics is an unofficial addon for Mekanism and Mekanism Generators. In order to run this mod you need: [![](https://github.com/AET9RNAL/ModAssets/releases/download/Assets/MekaIcon.png)](https://modrinth.com/mod/mekanism/version/9.8.3.390)||[![](https://github.com/AET9RNAL/ModAssets/releases/download/Assets/MekaIcon.png)](https://modrinth.com/mod/mekanism-generators/version/9.8.3.390)
+Eco Energistics is an unofficial addon for Mekanism and Mekanism Generators. This branch targets Minecraft 1.12.2 and MekCEu v10, with Mekanism and Mekanism Generators pinned to 10.0.0.450 or newer.
 
 Please report any bugs you find on GitHub/Discord
+
+The current tracking item for this port is [issue #9](https://github.com/sddsd2332/EcoEnergistics/issues/9).
 
 
 All solar panels can now function at night, although energy production will be cut in half. All solar panels can now also work when it's raining during the day, with 50% penalization. Raining at night won't cut production even further if you are in a warm biome e.g - desert, but if you are in a wet biome, you will get max possible energy production penalty. All added content is featured in the list below. Specified solar panel energy production in the list is average.

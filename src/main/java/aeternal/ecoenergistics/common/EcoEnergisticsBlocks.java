@@ -1,6 +1,9 @@
 package aeternal.ecoenergistics.common;
 
-import aeternal.ecoenergistics.common.block.*;
+import aeternal.ecoenergistics.common.block.BlockBasic;
+import aeternal.ecoenergistics.common.block.BlockEcoGenerator;
+import aeternal.ecoenergistics.common.block.BlockEcoTransmitter;
+import aeternal.ecoenergistics.common.block.BlockOre;
 import aeternal.ecoenergistics.common.block.states.BlockStateEcoGenerator;
 import aeternal.ecoenergistics.common.config.EcoConfig;
 import aeternal.ecoenergistics.common.item.ItemBlockBasic;

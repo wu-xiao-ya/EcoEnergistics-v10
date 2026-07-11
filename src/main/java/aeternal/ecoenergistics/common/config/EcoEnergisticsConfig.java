@@ -1,6 +1,6 @@
 package aeternal.ecoenergistics.common.config;
 
-import aeternal.ecoenergistics.common.block.states.BlockStateEcoGenerator.*;
+import aeternal.ecoenergistics.common.block.states.BlockStateEcoGenerator.EcoGeneratorType;
 import aeternal.ecoenergistics.common.tier.MEETiers;
 import mekanism.common.config.BaseConfig;
 import mekanism.common.config.options.DoubleOption;
