@@ -48,7 +48,7 @@ public class GuiEcoSolarGenerator extends GuiMekanismTile<TileEntityEcoSolarPane
 
     @Override
     protected void drawForegroundText(int mouseX, int mouseY) {
-        drawTitleText(new TextComponentString(tileEntity.func_70005_c_()), 6);
+        drawTitleText(new TextComponentString(tileEntity.getName()), 6);
         renderInventoryText();
         super.drawForegroundText(mouseX, mouseY);
     }

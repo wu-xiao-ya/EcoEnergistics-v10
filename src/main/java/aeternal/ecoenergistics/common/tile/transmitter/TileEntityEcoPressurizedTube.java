@@ -20,7 +20,6 @@ import mekanism.common.capabilities.Capabilities;
 import mekanism.common.transmitters.grid.GasNetwork;
 import mekanism.common.tile.transmitter.TileEntitySidedPipe.ConnectionType;
 import mekanism.common.util.CapabilityUtils;
-import mekanism.common.util.GasUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -83,10 +82,9 @@ public class TileEntityEcoPressurizedTube extends TileEntityEcoTransmitter<IGasH
         if (!getWorld().isRemote) {
             updateShare();
             if (nextTransfer <= 0) {
-                IGasHandler[] connectedAcceptors = GasUtils.getConnectedAcceptors(getPos(), getWorld());
                 boolean successAtLeaseOnce = false;
                 for (EnumFacing side : getConnections(ConnectionType.PULL)) {
-                    IGasHandler container = connectedAcceptors[side.ordinal()];
+                    IGasHandler container = getCachedAcceptor(side);
                     if (container != null) {
                         GasStack received = container.drawGas(side.getOpposite(), getAvailablePull(), false);
                         if (received != null && received.amount != 0 && takeGas(received, false) == received.amount) {
@@ -191,7 +189,7 @@ public class TileEntityEcoPressurizedTube extends TileEntityEcoTransmitter<IGasH
 
     @Override
     public boolean isValidAcceptor(TileEntity tile, EnumFacing side) {
-        return GasUtils.isValidAcceptorOnSide(tile, side);
+        return tile != null && CapabilityUtils.hasCapability(tile, Capabilities.GAS_HANDLER_CAPABILITY, side.getOpposite());
     }
 
     @Override

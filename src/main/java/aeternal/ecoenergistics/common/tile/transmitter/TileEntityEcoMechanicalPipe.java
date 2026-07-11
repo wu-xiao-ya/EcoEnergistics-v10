@@ -221,7 +221,7 @@ public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluid
     }
 
     private List<IExtendedFluidTank> getFluidTanksForSide(EnumFacing side) {
-        if (isRedstoneActivated() || (side != null && !canConnect(side))) {
+        if (side != null && !canConnect(side)) {
             return Collections.emptyList();
         }
         return Collections.singletonList(fluidTank);
@@ -235,12 +235,10 @@ public class TileEntityEcoMechanicalPipe extends TileEntityEcoTransmitter<IFluid
         return side == null || getConnectionType(side) == ConnectionType.NORMAL || getConnectionType(side) == ConnectionType.PUSH;
     }
 
-    @Override
     public int fill(EnumFacing from, @Nonnull FluidStack resource, boolean doFill) {
         return getFluidCapability(from).fill(resource, doFill);
     }
 
-    @Override
     public boolean canFill(EnumFacing from, @Nonnull FluidStack fluid) {
         return fluid != null
                 && fluid.getFluid() != null

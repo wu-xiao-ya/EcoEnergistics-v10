@@ -7,8 +7,11 @@ import aeternal.ecoenergistics.common.block.states.BlockStateEcoGenerator.EcoGen
 import aeternal.ecoenergistics.common.tile.TileEntityEcoSolarPanel;
 import mekanism.api.IMekWrench;
 import mekanism.api.energy.IEnergizedItem;
+import mekanism.common.base.IComparatorSupport;
 import mekanism.common.base.IActiveState;
 import mekanism.common.base.IBoundingBlock;
+import mekanism.common.base.ISustainedData;
+import mekanism.common.base.ISustainedInventory;
 import mekanism.common.block.BlockMekanismContainer;
 import mekanism.common.block.states.BlockStateFacing;
 import mekanism.common.config.MekanismConfig;
@@ -16,7 +19,6 @@ import mekanism.common.integration.wrenches.Wrenches;
 import mekanism.common.security.ISecurityItem;
 import mekanism.common.security.ISecurityTile;
 import mekanism.common.tile.prefab.TileEntityBasicBlock;
-import mekanism.common.tile.prefab.TileEntityContainerBlock;
 import mekanism.common.tile.prefab.TileEntityElectricBlock;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.SecurityUtils;
@@ -347,9 +349,9 @@ public abstract class BlockEcoGenerator extends BlockMekanismContainer {
             electricItem.setEnergy(itemStack, ((TileEntityElectricBlock) tileEntity).getEnergy());
         }
 
-        if (tileEntity instanceof TileEntityContainerBlock && ((TileEntityContainerBlock) tileEntity).handleInventory()) {
+        if (tileEntity instanceof ISustainedInventory && itemStack.getItem() instanceof ISustainedInventory) {
             ISustainedInventory inventory = (ISustainedInventory) itemStack.getItem();
-            inventory.setInventory(((TileEntityContainerBlock) tileEntity).getInventory(), itemStack);
+            inventory.setInventory(((ISustainedInventory) tileEntity).getInventory(), itemStack);
         }
 
         if (tileEntity instanceof ISustainedData) {

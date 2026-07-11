@@ -270,7 +270,7 @@ public class ItemBlockEcoGenerator extends ItemBlock implements IEnergizedItem, 
     @Override
     @Optional.Method(modid = MekanismHooks.IC2_MOD_ID)
     public IElectricItemManager getManager(ItemStack itemStack) {
-        return IC2ItemManager.getManager(this);
+        return IC2ItemManager.getManager();
     }
 
     @Override

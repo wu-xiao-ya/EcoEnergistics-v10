@@ -162,7 +162,7 @@ public class ItemEcoEnergized extends ItemMEE implements IEnergizedItem, ISpecia
     @Override
     @Optional.Method(modid = MekanismHooks.IC2_MOD_ID)
     public IElectricItemManager getManager(ItemStack itemStack) {
-        return IC2ItemManager.getManager(this);
+        return IC2ItemManager.getManager();
     }
 
     @Override
