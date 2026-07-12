@@ -2,23 +2,20 @@ package aeternal.ecoenergistics.client.gui;
 
 import aeternal.ecoenergistics.common.inventory.container.ContainerEcoSolarGenerator;
 import aeternal.ecoenergistics.common.tile.TileEntityEcoSolarPanel;
+import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiInnerScreen;
+import mekanism.client.gui.element.GuiSideHolder;
+import mekanism.client.gui.element.GuiTexturedElement;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
-import mekanism.client.gui.element.slot.GuiSlot;
-import mekanism.client.gui.element.slot.SlotType;
-import mekanism.client.gui.element.GuiTexturedElement;
-import mekanism.common.inventory.container.slot.SlotOverlay;
-import mekanism.client.gui.element.tab.GuiRedstoneControlTab;
-import mekanism.client.gui.element.tab.GuiSecurityTab;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.generators.client.gui.element.GuiStateTexture;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,16 +27,15 @@ public class GuiEcoSolarGenerator extends GuiMekanismTile<TileEntityEcoSolarPane
 
     public GuiEcoSolarGenerator(InventoryPlayer inventory, TileEntityEcoSolarPanel tile) {
         super(tile, new ContainerEcoSolarGenerator(inventory, tile));
+        dynamicSlots = true;
     }
 
     @Override
     protected void addGuiElements() {
+        addButton(GuiSideHolder.create(this, -26, 6, 98, true, true, SpecialColors.TAB_ARMOR_SLOTS));
         super.addGuiElements();
         addButton(new GuiInnerScreen(this, 40, 23, 96, 40, this::getScreenText));
         addButton(new GuiEnergyTab(this, (GuiTexturedElement.IInfoHandler) () -> getEnergyTabText(tileEntity.getProduction())));
-        addButton(new GuiRedstoneControlTab<>(this, tileEntity));
-        addButton(new GuiSecurityTab<>(this, tileEntity));
-        addButton(new GuiSlot(SlotType.POWER, this, 142, 34).with(SlotOverlay.POWER));
         addButton(new GuiVerticalPowerBar(this, tileEntity.getMainEnergyContainer(), 164, 15));
         addButton(new GuiStateTexture(this, 18, 35, tileEntity::canSeeSun,
                 new ResourceLocation("mekanismgenerators", "gui/sees_sun.png"),
