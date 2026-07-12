@@ -8,10 +8,12 @@ import aeternal.ecoenergistics.common.tier.MEETiers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Locale;
+
 public class EcoEnergisticsUtils {
 
     public static ResourceLocation getResource(ResourceType type, String name) {
-        return new ResourceLocation(EcoEnergistics.MOD_ID,type.getPrefix() + name);
+        return new ResourceLocation(EcoEnergistics.MOD_ID, (type.getPrefix() + name).toLowerCase(Locale.ROOT));
     }
 
 

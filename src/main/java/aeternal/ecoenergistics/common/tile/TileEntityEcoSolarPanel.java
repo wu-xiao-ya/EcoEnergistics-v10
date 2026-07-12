@@ -46,11 +46,6 @@ public abstract class TileEntityEcoSolarPanel extends TileEntityEcoGenerator {
     }
 
     @Override
-    public boolean canSetFacing(@Nonnull EnumFacing facing) {
-        return super.canSetFacing(facing);
-    }
-
-    @Override
     public void validate() {
         super.validate();
         Biome b = world.provider.getBiomeForCoords(getPos());
@@ -71,27 +66,25 @@ public abstract class TileEntityEcoSolarPanel extends TileEntityEcoGenerator {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        if (!world.isRemote) {
-            energySlot.drainContainer();
-            // Sort out if the generator can see the sun; we no longer check if it's raining here,
-            // since under the new rules, we can still generate power when it's raining, albeit at a
-            // significant penalty.
-            if (canSeeSky() && !world.provider.isNether()) {
-                seesSun = world.isDaytime();
-                seesMoon = !world.isDaytime();
+    public void onAsyncUpdateServer() {
+        super.onAsyncUpdateServer();
+        energySlot.drainContainer();
+        // Sort out if the generator can see the sun; we no longer check if it's raining here,
+        // since under the new rules, we can still generate power when it's raining, albeit at a
+        // significant penalty.
+        if (canSeeSky() && !world.provider.isNether()) {
+            seesSun = world.isDaytime();
+            seesMoon = !world.isDaytime();
+        }
+        if (canOperate()) {
+            setActive(true);
+            if (canSeeSun()) {
+                setEnergy(getEnergy() + getProduction());
+            } else if (canSeeMoon()) {
+                setEnergy(getEnergy() + getProductionNightTime());
             }
-            if (canOperate()) {
-                setActive(true);
-                if (canSeeSun()) {
-                    setEnergy(getEnergy() + getProduction());
-                } else if (canSeeMoon()) {
-                    setEnergy(getEnergy() + getProductionNightTime());
-                }
-            } else {
-                setActive(false);
-            }
+        } else {
+            setActive(false);
         }
     }
 
