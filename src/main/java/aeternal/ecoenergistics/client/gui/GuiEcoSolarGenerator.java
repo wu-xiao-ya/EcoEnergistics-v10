@@ -2,6 +2,7 @@ package aeternal.ecoenergistics.client.gui;
 
 import aeternal.ecoenergistics.common.inventory.container.ContainerEcoSolarGenerator;
 import aeternal.ecoenergistics.common.tile.TileEntityEcoSolarPanel;
+import mekanism.common.Mekanism;
 import mekanism.client.gui.element.GuiInnerScreen;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
@@ -23,8 +24,32 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiEcoSolarGenerator extends GuiGenerator<TileEntityEcoSolarPanel, ContainerEcoSolarGenerator> {
 
+    private boolean firstFrameRendered;
+
     public GuiEcoSolarGenerator(InventoryPlayer inventory, TileEntityEcoSolarPanel tile) {
         super(tile, new ContainerEcoSolarGenerator(inventory, tile));
+        Mekanism.logger.info("[Eco GUI] Constructed solar GUI for {} at {}", tile.getClass().getSimpleName(), tile.getPos());
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        Mekanism.logger.info("[Eco GUI] Initialized solar GUI at {} with {} buttons", tileEntity.getPos(), buttons.size());
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        if (!firstFrameRendered) {
+            firstFrameRendered = true;
+            Mekanism.logger.info("[Eco GUI] Rendered first solar GUI frame at {}", tileEntity.getPos());
+        }
+    }
+
+    @Override
+    public void onGuiClosed() {
+        Mekanism.logger.info("[Eco GUI] Solar GUI closed at {}", tileEntity.getPos());
+        super.onGuiClosed();
     }
 
     @Override
