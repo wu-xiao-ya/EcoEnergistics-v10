@@ -22,10 +22,8 @@ import aeternal.ecoenergistics.common.tile.panelsolar.*;
 import aeternal.ecoenergistics.common.tile.stationsolar.*;
 import aeternal.ecoenergistics.common.tile.transmitter.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mekanism.common.Mekanism;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.item.ItemLayerWrapper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -40,7 +38,6 @@ import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -255,30 +252,12 @@ public class EcoEnergisticsClientProxy extends EcoEnergisticsCommonProxy {
     @Override
     public GuiScreen getClientGui(int ID, EntityPlayer player, World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
-        Mekanism.logger.info(
-                "[Eco GUI] Client GUI request: id={}, pos={}, tile={}, invalid={}",
-                ID, pos, tileEntity == null ? "null" : tileEntity.getClass().getSimpleName(),
-                tileEntity != null && tileEntity.isInvalid()
-        );
         return switch (ID) {
             case 0 -> tileEntity instanceof TileEntityEcoSolarPanel
                     ? new GuiEcoSolarGenerator(player.inventory, (TileEntityEcoSolarPanel) tileEntity)
                     : null;
             default -> null;
         };
-    }
-
-    @SubscribeEvent
-    public void onGuiOpen(GuiOpenEvent event) {
-        GuiScreen current = Minecraft.getMinecraft().currentScreen;
-        GuiScreen next = event.getGui();
-        if (current instanceof GuiEcoSolarGenerator || next instanceof GuiEcoSolarGenerator) {
-            Mekanism.logger.info(
-                    "[Eco GUI] Screen transition: {} -> {}",
-                    current == null ? "null" : current.getClass().getName(),
-                    next == null ? "null" : next.getClass().getName()
-            );
-        }
     }
 
     @SubscribeEvent

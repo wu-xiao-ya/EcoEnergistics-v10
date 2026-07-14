@@ -7,6 +7,8 @@ Please report any bugs you find on GitHub/Discord
 
 The current tracking item for this port is [issue #9](https://github.com/sddsd2332/EcoEnergistics/issues/9).
 
+Solar generator GUIs include energy storage, live production, maximum output, charging, redstone control, and security controls. The v10 GUI implementation also avoids the overly broad `GuiMekanismTile` hook used by Mekanism Advanced Configuration Card 1.0.5, which otherwise closes unrelated Mekanism-style screens when no card slot bag is present.
+
 
 All solar panels can now function at night, although energy production will be cut in half. All solar panels can now also work when it's raining during the day, with 50% penalization. Raining at night won't cut production even further if you are in a warm biome e.g - desert, but if you are in a wet biome, you will get max possible energy production penalty. All added content is featured in the list below. Specified solar panel energy production in the list is average.
 
@@ -77,9 +79,7 @@ All solar panels can now function at night, although energy production will be c
 *   ![](https://github.com/AET9RNAL/ModAssets/releases/download/Assets/EcoEnergistics_Icon_photonicalloy.png) - Photonic Alloy
 *   ![](https://github.com/AET9RNAL/ModAssets/releases/download/Assets/EcoEnergistics_Icon_neutronalloy.png) - Neutron Alloy
 
-The addon is currently in development, bugs are expected, although nothing critical was noticed during the testing. All solar panels all fully functional and configurable, with the only exception of absent GUI.
-
-Don't try to force something you want to charge into panels via pipes etc, you won't be able to get it out. The GUI might or might not be added in the future, as I'm currently trying to figure out how to do it. If you liked this project and you want to speed up the process and contribute to the addon development feel free to create a pull request
+The addon is currently in development, so please report any remaining MekCEu v10 compatibility issues with a full client or server log. Solar panels and stations expose their charging slot through the GUI; inserted items should be removed through the same inventory flow rather than forced into the machine through pipes.
 
 Credits: Huge thanks to the Mekanism team for creating Mekanism and it's official addons
 

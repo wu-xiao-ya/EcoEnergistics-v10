@@ -33,6 +33,12 @@ jobs:
             exit 1
           fi
         done
+    - name: Check solar GUI compatibility base
+      shell: bash
+      run: |
+        artifact="$(find build/libs -maxdepth 1 -name '*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print -quit)"
+        javap -classpath "$artifact" aeternal.ecoenergistics.client.gui.GuiEcoSolarGenerator |
+          grep -F 'extends mekanism.client.gui.GuiMekanism<'
     - name: Upload jar artifact
       uses: actions/upload-artifact@v4
       with:

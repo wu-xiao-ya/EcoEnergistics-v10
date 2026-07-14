@@ -32,7 +32,6 @@ import aeternal.ecoenergistics.common.tile.stationsolar.TileEntitySolarStationSp
 import aeternal.ecoenergistics.common.tile.transmitter.TileEntityEcoMechanicalPipe;
 import aeternal.ecoenergistics.common.tile.transmitter.TileEntityEcoPressurizedTube;
 import aeternal.ecoenergistics.common.tile.transmitter.TileEntityEcoUniversalCable;
-import mekanism.common.Mekanism;
 import mekanism.common.base.IGuiProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -122,11 +121,6 @@ public class EcoEnergisticsCommonProxy implements IGuiProvider {
     @Override
     public Container getServerGui(int ID, EntityPlayer player, World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
-        Mekanism.logger.info(
-                "[Eco GUI] Server GUI request: id={}, pos={}, tile={}, invalid={}",
-                ID, pos, tileEntity == null ? "null" : tileEntity.getClass().getSimpleName(),
-                tileEntity != null && tileEntity.isInvalid()
-        );
         return switch (ID) {
             case 0 -> tileEntity instanceof TileEntityEcoSolarPanel
                     ? new ContainerEcoSolarGenerator(player.inventory, (TileEntityEcoSolarPanel) tileEntity)
