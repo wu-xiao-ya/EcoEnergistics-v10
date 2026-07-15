@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.3] - 2026-07-16
+
+### Changed
+- Promoted the MekCEu v10 compatibility build after the complete client gameplay and rendering test passed.
+
 ## [1.5.2] - 2026-07-14
 
 ### Fixed
